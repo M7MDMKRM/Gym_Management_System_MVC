@@ -1,0 +1,9 @@
+namespace Gym_Management_System_MCV_C48.Entities
+{
+    public abstract class BaseEntity
+    {
+        public int Id { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+    }
+}

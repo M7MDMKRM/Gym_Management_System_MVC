@@ -1,0 +1,94 @@
+@model MemberEditViewModel
+@{
+    ViewData["Title"] = "Edit Member";
+}
+
+<div class="page-head" style="margin-bottom: 24px;">
+    <h1 class="page-title">Edit Member: @Model.Name</h1>
+    <p class="page-sub">Update member profile, address, and photo</p>
+</div>
+
+<div class="card-r card-pad" style="max-width: 820px;">
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CurrentPhoto" />
+        <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom: 16px;"></div>
+
+        <h3 style="font-size:16px; font-weight:700; color:var(--route-navy); margin-bottom:14px; border-bottom:1px solid var(--line-2); padding-bottom:8px;">
+            Personal Profile
+        </h3>
+
+        <div class="form-grid">
+            <div class="field">
+                <label asp-for="Name">Full Name</label>
+                <input asp-for="Name" class="input-r" />
+                <span asp-validation-for="Name" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Email">Email Address</label>
+                <input asp-for="Email" type="email" class="input-r" />
+                <span asp-validation-for="Email" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Phone">Phone Number</label>
+                <input asp-for="Phone" class="input-r" />
+                <span asp-validation-for="Phone" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Gender">Gender</label>
+                <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="input-r"></select>
+                <span asp-validation-for="Gender" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="DateOfBirth">Date of Birth</label>
+                <input asp-for="DateOfBirth" type="date" class="input-r" />
+                <span asp-validation-for="DateOfBirth" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="NewPhotoFile">Change Profile Photo</label>
+                <input asp-for="NewPhotoFile" type="file" accept="image/*" class="input-r" data-photo-input="#editPhotoPreview" />
+                <span asp-validation-for="NewPhotoFile" class="field-error"></span>
+                <div style="margin-top:10px;">
+                    <img id="editPhotoPreview" src="@(Model.CurrentPhoto ?? "/assets/images/default-avatar.png")" alt="Preview" class="avatar" style="width:64px; height:64px;" />
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-size:16px; font-weight:700; color:var(--route-navy); margin-top:28px; margin-bottom:14px; border-bottom:1px solid var(--line-2); padding-bottom:8px;">
+            Address (Complex Property)
+        </h3>
+
+        <div class="form-grid three">
+            <div class="field">
+                <label asp-for="BuildingNumber">Building No.</label>
+                <input asp-for="BuildingNumber" type="number" class="input-r" />
+                <span asp-validation-for="BuildingNumber" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Street">Street</label>
+                <input asp-for="Street" class="input-r" />
+                <span asp-validation-for="Street" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="City">City</label>
+                <input asp-for="City" class="input-r" />
+                <span asp-validation-for="City" class="field-error"></span>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line-2);">
+            <button type="submit" class="btn-r btn-primary-r">
+                <i class="bi bi-check2"></i> Save Changes
+            </button>
+            <a class="btn-r btn-ghost-r" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</div>
+

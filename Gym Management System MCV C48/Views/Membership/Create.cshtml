@@ -1,0 +1,48 @@
+@model MembershipCreateViewModel
+@{
+    ViewData["Title"] = "Assign Plan";
+}
+
+<div class="page-head" style="margin-bottom: 24px;">
+    <h1 class="page-title">Assign Plan to Member</h1>
+    <p class="page-sub">Select an athlete and choose an active membership package</p>
+</div>
+
+<div class="card-r card-pad" style="max-width: 680px;">
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom: 16px;"></div>
+
+        <div class="form-grid">
+            <div class="field full">
+                <label asp-for="MemberId">Select Member</label>
+                <select asp-for="MemberId" asp-items="Model.MembersList" class="input-r">
+                    <option value="">-- Choose Member --</option>
+                </select>
+                <span asp-validation-for="MemberId" class="field-error"></span>
+            </div>
+
+            <div class="field full">
+                <label asp-for="PlanId">Select Active Plan</label>
+                <select asp-for="PlanId" asp-items="Model.PlansList" class="input-r">
+                    <option value="">-- Choose Active Plan --</option>
+                </select>
+                <span asp-validation-for="PlanId" class="field-error"></span>
+            </div>
+
+            <div class="field full">
+                <label asp-for="StartDate">Subscription Start Date</label>
+                <input asp-for="StartDate" type="date" class="input-r" />
+                <span asp-validation-for="StartDate" class="field-error"></span>
+                <div class="field-hint"><i class="bi bi-info-circle"></i> The expiry date will be automatically calculated based on the selected plan's duration.</div>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line-2);">
+            <button type="submit" class="btn-r btn-primary-r">
+                <i class="bi bi-check2"></i> Confirm Subscription
+            </button>
+            <a class="btn-r btn-ghost-r" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</div>
+

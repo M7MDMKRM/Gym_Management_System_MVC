@@ -1,0 +1,54 @@
+@model PlanCreateViewModel
+@{
+    ViewData["Title"] = "Create Plan";
+}
+
+<div class="page-head" style="margin-bottom: 24px;">
+    <h1 class="page-title">Create Plan</h1>
+    <p class="page-sub">Define a new membership package for members</p>
+</div>
+
+<div class="card-r card-pad" style="max-width: 720px;">
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom: 16px;"></div>
+
+        <div class="form-grid">
+            <div class="field full">
+                <label asp-for="Name">Plan Name</label>
+                <input asp-for="Name" class="input-r" placeholder="e.g. Premium Annual, Summer Pass" />
+                <span asp-validation-for="Name" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Price">Price (EGP)</label>
+                <input asp-for="Price" type="number" step="1" class="input-r" placeholder="e.g. 1500" />
+                <span asp-validation-for="Price" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="DurationDays">Duration (Days)</label>
+                <input asp-for="DurationDays" type="number" class="input-r" placeholder="e.g. 30, 90, 365" />
+                <span asp-validation-for="DurationDays" class="field-error"></span>
+            </div>
+
+            <div class="field full">
+                <label asp-for="Description">Description & Privileges</label>
+                <textarea asp-for="Description" class="input-r" placeholder="Describe the access, classes, and facilities included..."></textarea>
+                <span asp-validation-for="Description" class="field-error"></span>
+            </div>
+
+            <div class="field full" style="display:flex; align-items:center; gap:10px;">
+                <input asp-for="IsActive" type="checkbox" id="isActiveCheck" style="width:18px; height:18px;" />
+                <label for="isActiveCheck" style="margin:0; font-weight:600; cursor:pointer;">Set active immediately (available for purchase)</label>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line-2);">
+            <button type="submit" class="btn-r btn-primary-r">
+                <i class="bi bi-check2"></i> Save Plan
+            </button>
+            <a class="btn-r btn-ghost-r" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</div>
+

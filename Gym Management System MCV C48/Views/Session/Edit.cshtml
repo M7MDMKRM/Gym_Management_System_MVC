@@ -1,0 +1,56 @@
+@model SessionEditViewModel
+@{
+    ViewData["Title"] = "Edit Session";
+}
+
+<div class="page-head" style="margin-bottom: 24px;">
+    <h1 class="page-title">Edit Session</h1>
+    <p class="page-sub">Update session schedule or assigned coach</p>
+</div>
+
+<div class="card-r card-pad" style="max-width: 720px;">
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom: 16px;"></div>
+
+        <div class="form-grid">
+            <div class="field full">
+                <label asp-for="Description">Session Title & Description</label>
+                <input asp-for="Description" class="input-r" />
+                <span asp-validation-for="Description" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="TrainerId">Assigned Trainer</label>
+                <select asp-for="TrainerId" asp-items="Model.TrainersList" class="input-r"></select>
+                <span asp-validation-for="TrainerId" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Capacity">Capacity (1 - 25 members)</label>
+                <input asp-for="Capacity" type="number" class="input-r" />
+                <span asp-validation-for="Capacity" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="StartDate">Start Date & Time</label>
+                <input asp-for="StartDate" type="datetime-local" class="input-r" />
+                <span asp-validation-for="StartDate" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="EndDate">End Date & Time</label>
+                <input asp-for="EndDate" type="datetime-local" class="input-r" />
+                <span asp-validation-for="EndDate" class="field-error"></span>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line-2);">
+            <button type="submit" class="btn-r btn-primary-r">
+                <i class="bi bi-check2"></i> Update Session
+            </button>
+            <a class="btn-r btn-ghost-r" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</div>
+

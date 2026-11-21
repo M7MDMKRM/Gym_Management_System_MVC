@@ -1,0 +1,96 @@
+@model TrainerDetailsViewModel
+@{
+    ViewData["Title"] = $"Trainer: {Model.Name}";
+}
+
+<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+    <div>
+        <h1 class="page-title">@Model.Name</h1>
+        <p class="page-sub">Trainer Profile & Scheduled Sessions</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+        <a class="btn-r btn-primary-r" asp-controller="Session" asp-action="Create">
+            <i class="bi bi-plus-lg"></i> Schedule Session
+        </a>
+        <a class="btn-r btn-outline-r" asp-action="Edit" asp-route-id="@Model.Id">
+            <i class="bi bi-pencil"></i> Edit Profile
+        </a>
+        <a class="btn-r btn-ghost-r" asp-action="Index">Back</a>
+    </div>
+</div>
+
+<div class="details-layout">
+    <div>
+        <div class="card-r card-pad" style="margin-bottom: 22px;">
+            <div class="card-head" style="margin-bottom: 16px;">
+                <h2><i class="bi bi-calendar-week"></i> Delivered Sessions</h2>
+            </div>
+
+            @if (Model.Sessions.Any())
+            {
+                <div class="table-wrap">
+                    <table class="table-r">
+                        <thead>
+                            <tr>
+                                <th>Session Description</th>
+                                <th>Capacity</th>
+                                <th>Start Date & Time</th>
+                                <th>End Date & Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in Model.Sessions)
+                            {
+                                <tr>
+                                    <td><strong>@s.Description</strong></td>
+                                    <td>@s.Capacity persons</td>
+                                    <td>@s.StartDate.ToString("dd MMM yyyy, hh:mm tt")</td>
+                                    <td>@s.EndDate.ToString("dd MMM yyyy, hh:mm tt")</td>
+                                    <td>
+                                        <span class="badge-r @(s.Status == "Upcoming" ? "badge-info" : (s.Status == "Ongoing" ? "badge-warn" : "badge-mute"))">
+                                            @s.Status
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="card-r empty">
+                    <div class="empty-icon"><i class="bi bi-calendar-x"></i></div>
+                    <h3>No sessions scheduled yet</h3>
+                    <p style="color:var(--muted); margin-top:6px;">Assign training sessions to this coach.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Side Profile Panel -->
+    <div>
+        <div class="panel-dark" style="padding: 24px; text-align:center;">
+            <img src="/assets/images/default-avatar.png" alt="@Model.Name" class="avatar" style="width:84px; height:84px; margin-bottom:14px;" />
+            <h2 style="font-size:20px; font-weight:800; color:#fff; margin:0 0 6px;">@Model.Name</h2>
+            <span class="badge-r badge-navy" style="margin-bottom:12px; display:inline-block;">@Model.Specialties</span>
+            <div style="color:#a8b9d6; font-size:14px;"><i class="bi bi-envelope"></i> @Model.Email</div>
+            <div style="color:#a8b9d6; font-size:14px; margin-top:4px;"><i class="bi bi-telephone"></i> @Model.Phone</div>
+        </div>
+
+        <div class="card-r card-pad">
+            <h3 style="font-size:15px; font-weight:700; color:var(--ink); margin-bottom:12px;">Trainer Info</h3>
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:14px;">
+                <div><span style="color:var(--muted);">Gender:</span> <strong>@Model.Gender</strong></div>
+                <div><span style="color:var(--muted);">Date of Birth:</span> <strong>@Model.DateOfBirth.ToString("dd/MM/yyyy")</strong></div>
+                <div><span style="color:var(--muted);">Hired Since:</span> <strong>@Model.HireDate.ToString("dd MMM yyyy")</strong></div>
+                <div style="border-top:1px solid var(--line-2); padding-top:10px; margin-top:4px;">
+                    <span style="color:var(--muted);">Address:</span><br />
+                    <strong>Bldg @Model.BuildingNumber, @Model.Street, @Model.City</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

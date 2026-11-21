@@ -1,0 +1,104 @@
+@model List<MemberListViewModel>
+@{
+    ViewData["Title"] = "Members";
+}
+
+<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+    <div>
+        <h1 class="page-title">Gym Members</h1>
+        <p class="page-sub">Manage member profiles, addresses, and memberships</p>
+    </div>
+    <div>
+        <a class="btn-r btn-primary-r" asp-action="Create">
+            <i class="bi bi-person-plus"></i> Add Member
+        </a>
+    </div>
+</div>
+
+<div class="card-r card-pad" style="margin-bottom: 22px;">
+    <form method="get" asp-action="Index" style="display:flex; gap:12px; align-items:center;">
+        <div style="flex:1; position:relative;">
+            <input type="text" name="search" value="@ViewBag.Search" class="input-r" placeholder="Search by member name, phone or email..." />
+        </div>
+        <button type="submit" class="btn-r btn-primary-r"><i class="bi bi-search"></i> Search</button>
+        @if (!string.IsNullOrEmpty(ViewBag.Search as string))
+        {
+            <a asp-action="Index" class="btn-r btn-ghost-r">Clear</a>
+        }
+    </form>
+</div>
+
+@if (Model.Any())
+{
+    <div class="card-r">
+        <div class="table-wrap">
+            <table class="table-r">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Current Plan</th>
+                        <th>Joined</th>
+                        <th style="text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var member in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="person">
+                                    <img src="@(member.Photo ?? "/assets/images/default-avatar.png")" alt="@member.Name" class="avatar" />
+                                    <div>
+                                        <a class="person-name" asp-action="Details" asp-route-id="@member.Id">@member.Name</a>
+                                        <div class="person-meta">@member.Email</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@member.Phone</td>
+                            <td>@member.Gender</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(member.ActivePlanName))
+                                {
+                                    <span class="badge-r badge-ok">@member.ActivePlanName</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-r badge-mute">No Active Plan</span>
+                                }
+                            </td>
+                            <td>@member.JoinDate.ToString("dd MMM yyyy")</td>
+                            <td class="actions">
+                                <a class="btn-r btn-ghost-r btn-sm-r" asp-action="Details" asp-route-id="@member.Id" title="View Profile">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a class="btn-r btn-outline-r btn-sm-r" asp-action="Edit" asp-route-id="@member.Id" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a class="btn-r btn-outline-r btn-sm-r" asp-controller="Membership" asp-action="Create" asp-route-memberId="@member.Id" title="Assign Plan">
+                                    <i class="bi bi-card-checklist"></i>
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@member.Id" method="post" style="display:inline;"
+                                      data-confirm="Are you sure you want to delete member '@member.Name'? This will also delete their subscriptions.">
+                                    <button type="submit" class="btn-r btn-soft-danger btn-sm-r" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card-r empty" style="margin-top:22px">
+        <div class="empty-icon"><i class="bi bi-people"></i></div>
+        <h3>No members found</h3>
+        <p style="color:var(--muted); margin-top:6px;">Add a new member to get started.</p>
+    </div>
+}
+

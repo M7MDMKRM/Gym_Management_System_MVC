@@ -1,0 +1,100 @@
+@model MemberDetailsViewModel
+@{
+    ViewData["Title"] = $"Member: {Model.Name}";
+}
+
+<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+    <div>
+        <h1 class="page-title">@Model.Name</h1>
+        <p class="page-sub">Member Profile & Subscriptions History</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+        <a class="btn-r btn-primary-r" asp-controller="Membership" asp-action="Create" asp-route-memberId="@Model.Id">
+            <i class="bi bi-plus-lg"></i> Add Subscription
+        </a>
+        <a class="btn-r btn-outline-r" asp-action="Edit" asp-route-id="@Model.Id">
+            <i class="bi bi-pencil"></i> Edit Profile
+        </a>
+        <a class="btn-r btn-ghost-r" asp-action="Index">Back</a>
+    </div>
+</div>
+
+<div class="details-layout">
+    <div>
+        <div class="card-r card-pad" style="margin-bottom: 22px;">
+            <div class="card-head" style="margin-bottom: 16px;">
+                <h2><i class="bi bi-card-checklist"></i> Membership History</h2>
+            </div>
+
+            @if (Model.Subscriptions.Any())
+            {
+                <div class="table-wrap">
+                    <table class="table-r">
+                        <thead>
+                            <tr>
+                                <th>Plan</th>
+                                <th>Price</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                                <th style="text-align:right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var sub in Model.Subscriptions)
+                            {
+                                <tr>
+                                    <td><strong>@sub.PlanName</strong></td>
+                                    <td>@sub.Price.ToString("N0") EGP</td>
+                                    <td>@sub.StartDate.ToString("dd MMM yyyy")</td>
+                                    <td>@sub.EndDate.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        <span class="badge-r @(sub.IsActive ? "badge-ok" : "badge-mute")">@sub.Status</span>
+                                    </td>
+                                    <td class="actions">
+                                        <form asp-controller="Membership" asp-action="Delete" asp-route-id="@sub.Id" method="post"
+                                              data-confirm="Cancel this membership subscription?">
+                                            <button type="submit" class="btn-r btn-soft-danger btn-sm-r">Cancel</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="card-r empty">
+                    <div class="empty-icon"><i class="bi bi-card-checklist"></i></div>
+                    <h3>No memberships yet</h3>
+                    <p style="color:var(--muted); margin-top:6px;">Assign a training plan to this member.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Side Profile Panel -->
+    <div>
+        <div class="panel-dark" style="padding: 24px; text-align:center;">
+            <img src="@(Model.Photo ?? "/assets/images/default-avatar.png")" alt="@Model.Name" class="avatar" style="width:84px; height:84px; margin-bottom:14px;" />
+            <h2 style="font-size:20px; font-weight:800; color:#fff; margin:0 0 6px;">@Model.Name</h2>
+            <div style="color:#a8b9d6; font-size:14px;"><i class="bi bi-envelope"></i> @Model.Email</div>
+            <div style="color:#a8b9d6; font-size:14px; margin-top:4px;"><i class="bi bi-telephone"></i> @Model.Phone</div>
+        </div>
+
+        <div class="card-r card-pad">
+            <h3 style="font-size:15px; font-weight:700; color:var(--ink); margin-bottom:12px;">Profile Info</h3>
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:14px;">
+                <div><span style="color:var(--muted);">Gender:</span> <strong>@Model.Gender</strong></div>
+                <div><span style="color:var(--muted);">Date of Birth:</span> <strong>@Model.DateOfBirth.ToString("dd/MM/yyyy")</strong></div>
+                <div><span style="color:var(--muted);">Joined On:</span> <strong>@Model.JoinDate.ToString("dd MMM yyyy")</strong></div>
+                <div style="border-top:1px solid var(--line-2); padding-top:10px; margin-top:4px;">
+                    <span style="color:var(--muted);">Address:</span><br />
+                    <strong>Bldg @Model.BuildingNumber, @Model.Street, @Model.City</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,67 @@
+@model PlanEditViewModel
+@{
+    ViewData["Title"] = "Edit Plan";
+}
+
+<div class="page-head" style="margin-bottom: 24px;">
+    <h1 class="page-title">Edit Plan: @Model.Name</h1>
+    <p class="page-sub">Update plan pricing and features</p>
+</div>
+
+@if (Model.IsLocked)
+{
+    <div class="callout" style="border-left-color: var(--warn); background: var(--warn-bg); color: var(--warn); margin-bottom: 22px;">
+        <i class="bi bi-lock-fill"></i>
+        <div><strong>Locked Plan:</strong> This plan has active memberships. Duration and active status are locked until active memberships end.</div>
+    </div>
+}
+
+<div class="card-r card-pad" style="max-width: 720px;">
+    <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom: 16px;"></div>
+
+        <div class="form-grid">
+            <div class="field full">
+                <label asp-for="Name">Plan Name</label>
+                <input asp-for="Name" class="input-r" />
+                <span asp-validation-for="Name" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Price">Price (EGP)</label>
+                <input asp-for="Price" type="number" step="1" class="input-r" />
+                <span asp-validation-for="Price" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="DurationDays">Duration (Days)</label>
+                <input asp-for="DurationDays" type="number" class="input-r" readonly="@(Model.IsLocked ? "readonly" : null)" />
+                <span asp-validation-for="DurationDays" class="field-error"></span>
+                @if (Model.IsLocked)
+                {
+                    <div class="field-hint"><i class="bi bi-info-circle"></i> Locked due to active subscriptions</div>
+                }
+            </div>
+
+            <div class="field full">
+                <label asp-for="Description">Description</label>
+                <textarea asp-for="Description" class="input-r"></textarea>
+                <span asp-validation-for="Description" class="field-error"></span>
+            </div>
+
+            <div class="field full" style="display:flex; align-items:center; gap:10px;">
+                <input asp-for="IsActive" type="checkbox" id="isActiveCheck" disabled="@(Model.IsLocked ? "disabled" : null)" style="width:18px; height:18px;" />
+                <label for="isActiveCheck" style="margin:0; font-weight:600;">Plan is active</label>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line-2);">
+            <button type="submit" class="btn-r btn-primary-r">
+                <i class="bi bi-check2"></i> Update Plan
+            </button>
+            <a class="btn-r btn-ghost-r" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</div>
+

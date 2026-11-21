@@ -1,8 +1,147 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+    <div>
+        <h1 class="page-title">Gym Overview</h1>
+        <p class="page-sub">Welcome back! Here's what's happening at the gym today.</p>
+    </div>
+    <div style="display:flex; gap: 10px;">
+        <a class="btn-r btn-primary-r" asp-controller="Membership" asp-action="Create">
+            <i class="bi bi-plus-lg"></i> New Subscription
+        </a>
+    </div>
+</div>
+
+<div class="kpi-grid">
+    <div class="card-r kpi">
+        <div class="kpi-icon info"><i class="bi bi-people"></i></div>
+        <div>
+            <div class="kpi-value">@Model.TotalMembers</div>
+            <div class="kpi-label">Total Members (@Model.ActiveMembers active)</div>
+        </div>
+    </div>
+    <div class="card-r kpi">
+        <div class="kpi-icon ok"><i class="bi bi-cash-stack"></i></div>
+        <div>
+            <div class="kpi-value">@Model.TotalRevenue.ToString("N0") <small style="font-size:16px;">EGP</small></div>
+            <div class="kpi-label">Subscriptions Revenue</div>
+        </div>
+    </div>
+    <div class="card-r kpi">
+        <div class="kpi-icon warn"><i class="bi bi-person-badge"></i></div>
+        <div>
+            <div class="kpi-value">@Model.TotalTrainers</div>
+            <div class="kpi-label">Coaches & Trainers</div>
+        </div>
+    </div>
+    <div class="card-r kpi">
+        <div class="kpi-icon mute"><i class="bi bi-tags"></i></div>
+        <div>
+            <div class="kpi-value">@Model.TotalPlans</div>
+            <div class="kpi-label">Membership Plans</div>
+        </div>
+    </div>
+    <div class="card-r kpi">
+        <div class="kpi-icon info"><i class="bi bi-calendar-week"></i></div>
+        <div>
+            <div class="kpi-value">@Model.ActiveSessions</div>
+            <div class="kpi-label">Active & Upcoming Sessions</div>
+        </div>
+    </div>
+    <div class="card-r kpi">
+        <div class="kpi-icon ok"><i class="bi bi-shield-check"></i></div>
+        <div>
+            <div class="kpi-value">@Model.ActiveMembers</div>
+            <div class="kpi-label">Current Active Athletes</div>
+        </div>
+    </div>
+</div>
+
+<div class="split">
+    <!-- Left: Recent Subscriptions -->
+    <div class="card-r card-pad">
+        <div class="card-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+            <h2><i class="bi bi-card-checklist"></i> Recent Subscriptions</h2>
+            <a class="btn-r btn-ghost-r btn-sm-r" asp-controller="Membership" asp-action="Index">View All</a>
+        </div>
+
+        @if (Model.RecentMemberships.Any())
+        {
+            <div class="table-wrap">
+                <table class="table-r">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Plan</th>
+                            <th>Valid Until</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sub in Model.RecentMemberships)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="person-name">@sub.MemberName</div>
+                                    <div class="person-meta">@sub.MemberEmail</div>
+                                </td>
+                                <td><strong>@sub.PlanName</strong></td>
+                                <td>@sub.EndDate.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    <span class="badge-r @(sub.IsActive ? "badge-ok" : "badge-mute")">@sub.Status</span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="card-r empty">
+                <div class="empty-icon"><i class="bi bi-inbox"></i></div>
+                <h3>No subscriptions found</h3>
+            </div>
+        }
+    </div>
+
+    <!-- Right: Upcoming Sessions -->
+    <div class="card-r card-pad">
+        <div class="card-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+            <h2><i class="bi bi-calendar-event"></i> Upcoming Sessions</h2>
+            <a class="btn-r btn-ghost-r btn-sm-r" asp-controller="Session" asp-action="Index">View All</a>
+        </div>
+
+        @if (Model.UpcomingSessions.Any())
+        {
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                @foreach (var session in Model.UpcomingSessions)
+                {
+                    <div class="session-row" style="background:#fafbfe; border-radius:12px; border:1px solid var(--line-2);">
+                        <div class="date-block" style="text-align:center; padding:8px; border-radius:10px; background:var(--route-tint); color:var(--route-navy);">
+                            <div style="font-size:18px; font-weight:800;">@session.StartDate.ToString("dd")</div>
+                            <div style="font-size:11px; text-transform:uppercase; font-weight:700;">@session.StartDate.ToString("MMM")</div>
+                        </div>
+                        <div>
+                            <div class="session-title">@session.Description</div>
+                            <div style="font-size:13px; color:var(--muted);"><i class="bi bi-person"></i> @session.TrainerName &bull; <i class="bi bi-people"></i> Cap: @session.Capacity</div>
+                        </div>
+                        <div class="session-side">
+                            <span class="badge-r badge-info">@session.StartDate.ToString("hh:mm tt")</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="card-r empty">
+                <div class="empty-icon"><i class="bi bi-calendar-x"></i></div>
+                <h3>No upcoming sessions</h3>
+            </div>
+        }
+    </div>
 </div>

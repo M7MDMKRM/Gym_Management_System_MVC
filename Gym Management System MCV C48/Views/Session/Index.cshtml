@@ -1,0 +1,70 @@
+@model List<SessionListViewModel>
+@{
+    ViewData["Title"] = "Sessions";
+}
+
+<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+    <div>
+        <h1 class="page-title">Training Sessions</h1>
+        <p class="page-sub">Schedule, organize, and assign training sessions to coaches</p>
+    </div>
+    <div>
+        <a class="btn-r btn-primary-r" asp-action="Create">
+            <i class="bi bi-calendar-plus"></i> Schedule Session
+        </a>
+    </div>
+</div>
+
+@if (Model.Any())
+{
+    <div style="display:flex; flex-direction:column; gap:14px;">
+        @foreach (var session in Model)
+        {
+            var isOngoing = session.Status == "Ongoing";
+            var isCompleted = session.Status == "Completed";
+            var rowClass = isCompleted ? "is-completed" : (isOngoing ? "is-ongoing" : "");
+
+            <div class="card-r session-row @rowClass" style="background:#fff;">
+                <div class="date-block" style="text-align:center; padding:12px 8px; border-radius:12px; background:var(--route-tint); color:var(--route-navy);">
+                    <div style="font-size:20px; font-weight:800; line-height:1.1;">@session.StartDate.ToString("dd")</div>
+                    <div style="font-size:12px; text-transform:uppercase; font-weight:700;">@session.StartDate.ToString("MMM")</div>
+                </div>
+
+                <div>
+                    <h3 class="session-title">@session.Description</h3>
+                    <div style="font-size:13.5px; color:var(--muted); display:flex; gap:16px; flex-wrap:wrap;">
+                        <span><i class="bi bi-person-badge"></i> Coach: <strong>@session.TrainerName</strong></span>
+                        <span><i class="bi bi-clock"></i> @session.StartDate.ToString("hh:mm tt") - @session.EndDate.ToString("hh:mm tt")</span>
+                        <span><i class="bi bi-people"></i> Max Capacity: <strong>@session.Capacity persons</strong></span>
+                    </div>
+                </div>
+
+                <div class="session-side" style="display:flex; gap:10px; align-items:center;">
+                    <span class="badge-r @(session.Status == "Upcoming" ? "badge-info" : (session.Status == "Ongoing" ? "badge-warn" : "badge-mute"))">
+                        @session.Status
+                    </span>
+
+                    <a class="btn-r btn-outline-r btn-sm-r" asp-action="Edit" asp-route-id="@session.Id">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+
+                    <form asp-action="Delete" asp-route-id="@session.Id" method="post"
+                          data-confirm="Cancel and delete this session?">
+                        <button type="submit" class="btn-r btn-soft-danger btn-sm-r">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="card-r empty" style="margin-top:22px">
+        <div class="empty-icon"><i class="bi bi-calendar-week"></i></div>
+        <h3>No sessions scheduled</h3>
+        <p style="color:var(--muted); margin-top:6px;">Create a training session and assign it to a trainer.</p>
+    </div>
+}
+

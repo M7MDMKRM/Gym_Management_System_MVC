@@ -1,0 +1,74 @@
+@model List<MembershipListViewModel>
+@{
+    ViewData["Title"] = "Memberships";
+}
+
+<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+    <div>
+        <h1 class="page-title">Member Subscriptions</h1>
+        <p class="page-sub">Assign and manage plan memberships for gym athletes</p>
+    </div>
+    <div>
+        <a class="btn-r btn-primary-r" asp-action="Create">
+            <i class="bi bi-plus-lg"></i> Assign Plan to Member
+        </a>
+    </div>
+</div>
+
+@if (Model.Any())
+{
+    <div class="card-r">
+        <div class="table-wrap">
+            <table class="table-r">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Subscribed Plan</th>
+                        <th>Price</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th style="text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sub in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="person-name">
+                                    <a asp-controller="Member" asp-action="Details" asp-route-id="@sub.MemberId">@sub.MemberName</a>
+                                </div>
+                                <div class="person-meta">@sub.MemberEmail</div>
+                            </td>
+                            <td><strong>@sub.PlanName</strong></td>
+                            <td>@sub.PlanPrice.ToString("N0") EGP</td>
+                            <td>@sub.StartDate.ToString("dd MMM yyyy")</td>
+                            <td>@sub.EndDate.ToString("dd MMM yyyy")</td>
+                            <td>
+                                <span class="badge-r @(sub.IsActive ? "badge-ok" : "badge-mute")">@sub.Status</span>
+                            </td>
+                            <td class="actions">
+                                <form asp-action="Delete" asp-route-id="@sub.Id" method="post" style="display:inline;"
+                                      data-confirm="Cancel this membership subscription for '@sub.MemberName'?">
+                                    <button type="submit" class="btn-r btn-soft-danger btn-sm-r" title="Cancel Subscription">
+                                        <i class="bi bi-x-circle"></i> Cancel
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card-r empty" style="margin-top:22px">
+        <div class="empty-icon"><i class="bi bi-card-checklist"></i></div>
+        <h3>No subscriptions found</h3>
+        <p style="color:var(--muted); margin-top:6px;">Assign a training plan to a gym member to get started.</p>
+    </div>
+}
+

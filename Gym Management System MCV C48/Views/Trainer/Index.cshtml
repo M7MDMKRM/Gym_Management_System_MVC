@@ -1,0 +1,67 @@
+@model List<TrainerListViewModel>
+@{
+    ViewData["Title"] = "Trainers";
+}
+
+<div class="page-head" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+    <div>
+        <h1 class="page-title">Trainers & Coaches</h1>
+        <p class="page-sub">Certified fitness trainers and class instructors</p>
+    </div>
+    <div>
+        <a class="btn-r btn-primary-r" asp-action="Create">
+            <i class="bi bi-person-plus"></i> Add Trainer
+        </a>
+    </div>
+</div>
+
+@if (Model.Any())
+{
+    <div class="grid-cards">
+        @foreach (var trainer in Model)
+        {
+            <div class="card-r trainer-card" style="padding: 22px;">
+                <div class="trainer-top" style="display:flex; gap:14px; align-items:center; margin-bottom:16px;">
+                    <img src="/assets/images/default-avatar.png" alt="@trainer.Name" class="avatar" style="width:52px; height:52px;" />
+                    <div style="flex:1;">
+                        <h2 style="font-size:17px; font-weight:800; margin:0 0 4px; color:var(--ink);">
+                            <a asp-action="Details" asp-route-id="@trainer.Id">@trainer.Name</a>
+                        </h2>
+                        <span class="badge-r badge-navy">@trainer.Specialties</span>
+                    </div>
+                </div>
+
+                <div style="font-size:13.5px; color:var(--ink-2); display:flex; flex-direction:column; gap:6px; margin-bottom:18px;">
+                    <div><i class="bi bi-envelope text-muted"></i> @trainer.Email</div>
+                    <div><i class="bi bi-telephone text-muted"></i> @trainer.Phone</div>
+                    <div><i class="bi bi-calendar-check text-muted"></i> Hired: @trainer.HireDate.ToString("MMM yyyy")</div>
+                    <div><i class="bi bi-calendar-week text-muted"></i> Assigned Sessions: <strong>@trainer.SessionsCount</strong></div>
+                </div>
+
+                <div class="card-foot" style="display:flex; gap:8px;">
+                    <a class="btn-r btn-outline-r btn-sm-r" asp-action="Details" asp-route-id="@trainer.Id" style="flex:1; text-align:center;">
+                        <i class="bi bi-eye"></i> Details
+                    </a>
+                    <a class="btn-r btn-outline-r btn-sm-r" asp-action="Edit" asp-route-id="@trainer.Id">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@trainer.Id" method="post"
+                          data-confirm="Delete trainer '@trainer.Name'? Their scheduled sessions will also be deleted.">
+                        <button type="submit" class="btn-r btn-soft-danger btn-sm-r">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="card-r empty" style="margin-top:22px">
+        <div class="empty-icon"><i class="bi bi-person-badge"></i></div>
+        <h3>No trainers found</h3>
+        <p style="color:var(--muted); margin-top:6px;">Add gym coaches to schedule training sessions.</p>
+    </div>
+}
+
