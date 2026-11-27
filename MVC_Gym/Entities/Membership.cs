@@ -1,4 +1,5 @@
-﻿namespace MVC_Gym.Entities
+﻿
+namespace MVC_Gym.Entities
 {
     public class Membership : BaseEntity
     {
@@ -6,7 +7,6 @@
         public Member? Member { get; set; } = default!;
         public int PlanId { get; set; }
         public Plan? Plan { get; set; } = default!;
-
-
+        public DateTime EndDate { get; set; }
     }
 }

@@ -1,7 +1,24 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MVC_Gym.Contexts;
+using MVC_Gym.Repositories.Classes;
+using MVC_Gym.Repositories.Entites;
+using MVC_Gym.Repositories.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+});
+
+
+builder.Services.AddScoped<IPlanRepositorie, PlanRepositories>();
+builder.Services.AddScoped<IMembershipRepositories, MembershipRepository>();
+
+builder.Services.AddDbContext<GymDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings")["DefaultConnection"]));
 
 var app = builder.Build();
 
